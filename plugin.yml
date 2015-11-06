@@ -1,0 +1,14 @@
+﻿name: SchematicBuildTool
+main: org.cat73.schematicbuildtool.SchematicBuildTool
+version: 1.1.0
+author: Cat73
+commands:
+    schematicbuildtool:
+        description: SchematicBuildTool base command
+        usage: /schematicbuildtool help
+        aliases: [sbt]
+        permission: schematicbuildtool.admin
+permissions:
+  schematicbuildtool.admin:
+    description: Allows access to all SchematicBuildTool command.
+    default: op
