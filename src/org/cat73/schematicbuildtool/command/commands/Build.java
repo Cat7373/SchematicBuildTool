@@ -20,6 +20,10 @@ public class Build extends ICommand {
     }
 
     public boolean run() {
+        if(args.length < 1) {
+            return false;
+        }
+        
         String fileName = args[0] + ".schematic";
         File file = new File(SchematicBuildTool.dataFolder, fileName);
 

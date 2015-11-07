@@ -26,3 +26,4 @@ http://www.planetminecraft.com/resources/projects/any/?share=schematic
 2. 支持MOD方块  
 3. 可以调建造方向  
 4. 恢复方块的附加数据
+5. 给每个子命令一条帮助信息
