@@ -10,7 +10,7 @@ public class PluginInfo {
     public final static String name = "SchematicsBuildTool";
     
     /* 插件的版本 */
-    public final static String version = "1.1.1";
+    public final static String version = "1.1.2";
     
     /* 作者 */
     public final static String author = "Cat73";

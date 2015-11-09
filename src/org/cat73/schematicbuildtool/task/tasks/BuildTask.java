@@ -23,6 +23,7 @@ public class BuildTask implements ITask {
     private static short[] secondBlocks;
     // Schematic配置信息
     private short length;
+    private short height;
     private short width;
     private byte[] blocks;
     private byte[] damages;
@@ -32,7 +33,7 @@ public class BuildTask implements ITask {
     private World world;
     // 状态标记
     private boolean over = false;
-    private int step = 0;
+    private int step = 1;
     // Config配置信息
     private int buildCount = SettingManager.getIntConfig("Build.speed");
     // 统计信息
@@ -43,6 +44,11 @@ public class BuildTask implements ITask {
     
     static {
         String[] secondBlockNames = new String[] {
+            // 流体
+            "stationary_water",   // 静止水
+            "water",              // 水
+            "stationary_lava",   // 静止岩浆
+            "lava",              // 岩浆
             // 装饰性方块
             "torch",              // 火把
             "ladder",             // 梯子
@@ -52,7 +58,8 @@ public class BuildTask implements ITask {
 
             // 红石
             "lever",              // 拉杆
-            "redstone_torch",     // 红石火把
+            "redstone_torch_on",  // 红石火把
+            "redstone_torch_off", // 红石火把
             "stone_button",       // 石质按钮
             "trapdoor",           // 活板门
             "tripwire_hook",      // 绊线钩
@@ -90,14 +97,14 @@ public class BuildTask implements ITask {
             isSecondBlock = isSecondBlocks[index];
             b = world.getBlockAt(x, y, z);
             
-            if(step == 0 && !isSecondBlock) {
+            if(step == 1 && !isSecondBlock) {
                 if(blockID != 0) {
                     byte damage = damages[index];
                     b.setTypeIdAndData(blockID, damage, false);
                 } else {
                     b.setTypeId(0);
                 }
-            } else if(step == 1 && isSecondBlock) {
+            } else if(step == 2 && isSecondBlock) {
                 byte damage = damages[index];
                 b.setTypeIdAndData(blockID, damage, false);
             }
@@ -116,8 +123,9 @@ public class BuildTask implements ITask {
                     
                     if(y < ey) {
                         y++;
+                        sender.sendMessage(ChatColor.GREEN + "步骤: " + step + "/2, 层数: " + (y - sy) + "/" + height);
                     } else {
-                        if(step < 1) {
+                        if(step < 2) {
                             index = 0;
                             x = sx;
                             y = sy;
@@ -151,6 +159,7 @@ public class BuildTask implements ITask {
         
         // 读建造参数
         length = (short) tags.get("Length").getValue();
+        height = (short) tags.get("Height").getValue();
         width = (short) tags.get("Width").getValue();
         byte[] blocks = (byte[]) tags.get("Blocks").getValue();
         damages = (byte[]) tags.get("Data").getValue();
@@ -185,7 +194,6 @@ public class BuildTask implements ITask {
         }
         
         // 计算坐标数据
-        short height = (short) tags.get("Height").getValue();
         Player player = Bukkit.getPlayer(sender.getName());
         world = player.getWorld();
         Location loc = player.getLocation();
@@ -195,6 +203,7 @@ public class BuildTask implements ITask {
         ex = sx + width - 1;
         ey = sy + height - 1;
         ey = ey > 256 ? 256 : ey;
+        height = (short) (ey - sy + 1);
         ez = sz + length - 1;
         index = 0;
         x = sx; y = sy; z = sz;
